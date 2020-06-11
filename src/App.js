@@ -1,43 +1,45 @@
 import React from "react";
 import PropTypes from "prop-types";
+import axios from "axios";
+import Movie from "./Movie";
 
-// state, class component of component in React
-// react component has many things behind
-// take react class component
-// not using return because it is not a function. use render method
-// the reason why we use class component is that class component has state what we want to use
-// and React run render method in the class component automatically
-// state is a object that we can put the data into your component. And the data will change.
-// The react doesnt refresh the render function
 class App extends React.Component {
   state = {
-    count: 0,
+    isLoading: true,
+    movie: [],
   };
-  add = () => {
-    // console.log("add");
-    this.setState((current) => ({ count: current.count + 1 }));
+
+  // we cannot use await without async, es6(ECMA Script)
+  getMovies = async () => {
+    const {
+      data: {
+        data: { movies },
+      },
+    } = await axios.get(
+      "https://yts-proxy.now.sh/list_movies.json?sort_by=rating"
+    );
+    this.setState({ movies, isLoading: false }); // {movie from state : moviefrom axios}
   };
-  minus = () => {
-    // console.log("minus");
-    this.setState((current) => ({ count: current.count - 1 }));
-  };
-  // component life cycle: render --> componentDidMount --> componentDidUpdate --> componentWillUnMount
+  // we are going to fetch data here in componentDidMount
   componentDidMount() {
-    console.log("component rendered");
-  }
-  componentDidUpdate() {
-    console.log("I just updated");
-  }
-  componentWillUnmount() {
-    console.log("Goodbye, cruel world");
+    this.getMovies();
   }
   render() {
-    console.log("I'm rendering");
+    const { isLoading, movies } = this.state;
     return (
       <div>
-        <h1>The Number is: {this.state.count}</h1>
-        <button onClick={this.add}>Add</button>
-        <button onClick={this.minus}>Minus</button>
+        {isLoading
+          ? "Loading..."
+          : movies.map((movie) => (
+              <Movie
+                key={movie.id}
+                id={movie.id}
+                year={movie.year}
+                title={movie.title}
+                summary={movie.summary}
+                poster={movie.medium_cover_image}
+              />
+            ))}
       </div>
     );
   }
