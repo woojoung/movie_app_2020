@@ -12,7 +12,7 @@ function App() {
       <Navigation />
       <Route path="/" exact={true} component={Home} />
       <Route path="/about" component={About} />
-      <Route path="/movie-detail" component={Detail} />
+      <Route path="/movie/:id" component={Detail} />
     </HashRouter>
   );
 }
@@ -21,3 +21,4 @@ function App() {
 export default App;
 
 // router takes the url and then look
+// every route on the router take information(props)

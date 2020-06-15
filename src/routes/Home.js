@@ -8,7 +8,7 @@ class Home extends React.Component {
   state = {
     isLoading: true,
     movie: [],
-  };
+  }; // redux is available to save this state somewhere
 
   // we cannot use await without async, es6(ECMA Script)
   getMovies = async () => {
